@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Lightbulb, Film, Coffee, BookOpen, PartyPopper } from 'lucide-react';
+import CustomScenes from '@/components/lighting/CustomScenes';
 
 const colors = ['#8B5CF6', '#EC4899', '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#FFFFFF'];
 
@@ -45,6 +46,11 @@ export default function Lighting() {
       d.type === 'light' ? { ...d, on: true, color: scene.color, brightness: scene.brightness } : d
     ));
 
+  const applyCustomScene = (scene) =>
+    setDevices((prev) => prev.map((d) =>
+      d.type === 'light' && scene.lights[d.id] ? { ...d, ...scene.lights[d.id] } : d
+    ));
+
   if (lights.length === 0) {
     return (
       <div className="p-4 md:p-8 max-w-md mx-auto text-center py-24 space-y-3">
@@ -77,6 +83,8 @@ export default function Lighting() {
           </button>
         ))}
       </div>
+
+      <CustomScenes lights={lights} onApply={applyCustomScene} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {lights.map((light) => (
