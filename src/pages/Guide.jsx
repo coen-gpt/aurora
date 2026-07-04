@@ -3,8 +3,9 @@ import { useNavigate, Link } from 'react-router-dom';
 import { load } from '@/lib/storage';
 import { loadChannels, loadEpg, getEpgUrl, nowNext } from '@/lib/iptv';
 import GuideRow from '@/components/guide/GuideRow';
+import GuideTimeline from '@/components/guide/GuideTimeline';
 import { Input } from '@/components/ui/input';
-import { Search, Loader2, CalendarClock } from 'lucide-react';
+import { Search, Loader2, CalendarClock, List, LayoutGrid } from 'lucide-react';
 
 export default function Guide() {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export default function Guide() {
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
   const [group, setGroup] = useState('All');
+  const [view, setView] = useState('timeline');
 
   useEffect(() => {
     const pl = playlists.find((p) => p.id === activeId);
@@ -109,7 +111,28 @@ export default function Guide() {
             >
               {groups.map((g) => <option key={g} value={g}>{g}</option>)}
             </select>
+            <div className="flex rounded-md border border-input overflow-hidden">
+              <button
+                onClick={() => setView('timeline')}
+                className={`px-3 flex items-center gap-1.5 text-xs font-medium transition-colors ${view === 'timeline' ? 'bg-primary/15 text-primary' : 'bg-card text-muted-foreground'}`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" /> Timeline
+              </button>
+              <button
+                onClick={() => setView('list')}
+                className={`px-3 flex items-center gap-1.5 text-xs font-medium transition-colors border-l border-input ${view === 'list' ? 'bg-primary/15 text-primary' : 'bg-card text-muted-foreground'}`}
+              >
+                <List className="w-3.5 h-3.5" /> On Now
+              </button>
+            </div>
           </div>
+          {view === 'timeline' ? (
+            <GuideTimeline
+              channels={rows.map((r) => r.ch)}
+              guide={guide}
+              onPlay={(ch) => navigate('/player', { state: { channel: ch } })}
+            />
+          ) : (
           <div className="space-y-2">
             {rows.map(({ ch, now, next }) => (
               <GuideRow
@@ -121,6 +144,7 @@ export default function Guide() {
               />
             ))}
           </div>
+          )}
         </div>
       )}
     </div>
