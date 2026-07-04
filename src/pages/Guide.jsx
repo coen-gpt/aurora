@@ -133,7 +133,7 @@ export default function Guide() {
               onPlay={(ch) => navigate('/player', { state: { channel: ch } })}
             />
           ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {rows.map(({ ch, now, next }) => (
               <GuideRow
                 key={ch.url}

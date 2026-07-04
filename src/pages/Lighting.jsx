@@ -14,11 +14,28 @@ const scenes = [
   { name: 'Party', icon: PartyPopper, color: '#EC4899', brightness: 85 },
 ];
 
+// Older pairings may be missing control fields — normalize so the UI never breaks.
+const normalize = (devices) =>
+  (Array.isArray(devices) ? devices : []).map((d) =>
+    d.type === 'light'
+      ? { on: false, brightness: 80, color: '#8B5CF6', room: 'Living Room', ...d }
+      : d
+  );
+
 export default function Lighting() {
-  const [devices, setDevices] = useState(() => load('hub_devices', []));
+  const [devices, setDevices] = useState(() => normalize(load('hub_devices', [])));
   const lights = devices.filter((d) => d.type === 'light');
 
   useEffect(() => { save('hub_devices', devices); }, [devices]);
+
+  // Stay in sync if devices are paired/changed in another tab or on another screen
+  useEffect(() => {
+    const onStorage = (e) => {
+      if (e.key === 'hub_devices') setDevices(normalize(load('hub_devices', [])));
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   const updateLight = (id, patch) =>
     setDevices((prev) => prev.map((d) => (d.id === id ? { ...d, ...patch } : d)));
