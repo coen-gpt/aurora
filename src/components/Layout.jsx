@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, Link } from 'react-router-dom';
-import { Home, Tv, Radio, Gamepad2, Lightbulb, CalendarClock } from 'lucide-react';
+import { Home, Tv, Radio, Gamepad2, Lightbulb, CalendarClock, Bookmark } from 'lucide-react';
 
 const LOGO = 'https://media.base44.com/images/public/6a485551f0d60c9fa95dcd18/8f526db81_generated_image.png';
 
@@ -8,6 +8,7 @@ const navItems = [
   { to: '/', label: 'Home', icon: Home },
   { to: '/player', label: 'Watch', icon: Tv },
   { to: '/guide', label: 'Guide', icon: CalendarClock },
+  { to: '/mylist', label: 'My List', icon: Bookmark },
   { to: '/devices', label: 'Devices', icon: Radio },
   { to: '/remote', label: 'Remote', icon: Gamepad2 },
   { to: '/lighting', label: 'Lighting', icon: Lightbulb },

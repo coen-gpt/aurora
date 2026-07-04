@@ -4,6 +4,7 @@ import { load } from '@/lib/storage';
 import { loadChannels, loadEpg, getEpgUrl, nowNext } from '@/lib/iptv';
 import GuideRow from '@/components/guide/GuideRow';
 import GuideTimeline from '@/components/guide/GuideTimeline';
+import VoiceSearch from '@/components/guide/VoiceSearch';
 import { Input } from '@/components/ui/input';
 import { Search, Loader2, CalendarClock, List, LayoutGrid } from 'lucide-react';
 
@@ -102,7 +103,8 @@ export default function Guide() {
           <div className="flex flex-col sm:flex-row gap-2">
             <div className="relative flex-1">
               <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-              <Input className="pl-9" placeholder="Search channels…" value={search} onChange={(e) => setSearch(e.target.value)} />
+              <Input className="pl-9 pr-11" placeholder="Search channels or shows…" value={search} onChange={(e) => setSearch(e.target.value)} />
+              <VoiceSearch onResult={setSearch} className="absolute right-1 top-1/2 -translate-y-1/2" />
             </div>
             <select
               value={group}

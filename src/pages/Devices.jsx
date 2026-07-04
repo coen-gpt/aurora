@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { load, save } from '@/lib/storage';
 import PairingModal from '@/components/devices/PairingModal';
+import InstallOnTv from '@/components/devices/InstallOnTv';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Tv, Speaker, MonitorPlay, Lightbulb, Plus, Trash2, Radio } from 'lucide-react';
@@ -78,6 +79,8 @@ export default function Devices() {
           </div>
         ))
       )}
+
+      <InstallOnTv />
 
       <PairingModal
         open={pairing}

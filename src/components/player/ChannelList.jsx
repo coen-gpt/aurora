@@ -1,10 +1,12 @@
 import React, { useState, useRef } from 'react';
-import { Star, Tv, Play, Info } from 'lucide-react';
+import { Star, Tv, Play, Info, Bookmark } from 'lucide-react';
 import { nowNext } from '@/lib/iptv';
+import { getMyList, toggleMyList, inMyList } from '@/lib/mylist';
 import HoverPreview from '@/components/player/HoverPreview';
 
 export default function ChannelList({ channels, favorites, onToggleFav, onSelect, onInfo, selectedUrl, guide = {} }) {
   const [hovered, setHovered] = useState(null);
+  const [myList, setMyList] = useState(getMyList);
   const timer = useRef(null);
 
   const enter = (url) => {
@@ -68,6 +70,13 @@ export default function ChannelList({ channels, favorites, onToggleFav, onSelect
               title="Movie & show details"
             >
               <Info className="w-4 h-4" />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setMyList(toggleMyList(ch)); }}
+              className={`p-1.5 rounded-lg transition-colors ${inMyList(myList, ch.url) ? 'text-primary' : 'text-muted-foreground/40 hover:text-primary'}`}
+              title={inMyList(myList, ch.url) ? 'Remove from My List' : 'Save to My List'}
+            >
+              <Bookmark className={`w-4 h-4 ${inMyList(myList, ch.url) ? 'fill-current' : ''}`} />
             </button>
             <button
               onClick={(e) => { e.stopPropagation(); onToggleFav(ch.url); }}
