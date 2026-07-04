@@ -12,7 +12,7 @@ const hubs = [
   { to: '/devices', title: 'Device Hub', desc: 'Pair & manage devices', icon: Radio, gradient: 'from-blue-600 to-cyan-500' },
   { to: '/remote', title: 'Remote', desc: 'One remote for everything', icon: Gamepad2, gradient: 'from-emerald-600 to-teal-500' },
   { to: '/lighting', title: 'Lighting', desc: 'Scenes & mood control', icon: Lightbulb, gradient: 'from-amber-500 to-orange-500' },
-  { to: '/install', title: 'Install on TV', desc: 'Step-by-step guide for onn 4K Pro & Android TV boxes', icon: MonitorPlay, gradient: 'from-violet-600 to-fuchsia-500' },
+  { to: '/install', title: 'Install on TV', desc: 'Mobile ADB companion install + browser fallback', icon: MonitorPlay, gradient: 'from-violet-600 to-fuchsia-500' },
 ];
 
 export default function Home() {
@@ -45,10 +45,10 @@ export default function Home() {
         <div className="relative max-w-7xl mx-auto px-4 md:px-8 pt-12 md:pt-20 pb-14 md:pb-20 flex flex-col items-center text-center">
           <img src={LOGO} alt="Aurora" className="w-20 h-20 md:w-24 md:h-24 rounded-3xl shadow-[0_0_60px_hsl(var(--primary)/0.5)] mb-6" />
           <h1 className="font-display text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">Stream. Control. Illuminate.</span>
+            <span className="bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">Stream. Install. Control.</span>
           </h1>
           <p className="text-muted-foreground text-sm md:text-lg mt-4 max-w-xl">
-            Your universe of entertainment. Watch your own channels, command every device, and set the perfect mood — all from one hub.
+            Your polished entertainment hub for playlists, TV companion install, Send to TV pairing, device control, and lighting — simple enough for the couch.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 mt-8">
             <Link

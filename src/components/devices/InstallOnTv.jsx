@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { MonitorPlay, Copy, Check, ChevronRight } from 'lucide-react';
+import { MonitorPlay, Copy, Check, ChevronRight, Smartphone, Wifi, PlugZap } from 'lucide-react';
 
 const steps = [
-  'On your streaming box (onn 4K Pro, Chromecast, or any Google TV), open the Play Store and install any web browser — "TV Bro" is free and works great with a remote.',
-  'Open the browser and type in the address below exactly as shown.',
-  'Once Aurora loads, open "TV Mode" and bookmark the page (or set it as your browser home) so it\'s one click away next time.',
+  { icon: Smartphone, text: 'Open Aurora on your phone, go to Device Hub, and choose Install on TV.' },
+  { icon: Wifi, text: 'Keep your phone and Android TV box on the same Wi‑Fi network, then enable Wireless debugging on the TV.' },
+  { icon: PlugZap, text: 'Use the Base44-powered mobile ADB flow to install the Aurora TV Companion, or fall back to TV Mode in a browser.' },
 ];
 
 export default function InstallOnTv() {
@@ -20,43 +20,53 @@ export default function InstallOnTv() {
   };
 
   return (
-    <div className="rounded-2xl bg-gradient-to-br from-card to-card/40 border border-border p-5 md:p-6 space-y-4">
-      <div className="flex items-center gap-3">
-        <div className="w-11 h-11 rounded-xl bg-primary/15 text-primary flex items-center justify-center shrink-0">
-          <MonitorPlay className="w-5 h-5" />
+    <div className="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/10 p-5 shadow-[0_0_42px_hsl(var(--primary)/0.12)] md:p-6">
+      <div className="pointer-events-none absolute -right-16 -top-20 h-48 w-48 rounded-full bg-primary/20 blur-3xl" />
+      <div className="relative grid gap-5 lg:grid-cols-[1fr_0.8fr]">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/15 text-primary">
+              <MonitorPlay className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="font-display text-lg font-semibold">Install Aurora TV Companion</h2>
+              <p className="text-xs text-muted-foreground">Fast mobile ADB install for Android TV boxes, plus a browser fallback for every screen.</p>
+            </div>
+          </div>
+
+          <ol className="grid gap-2.5">
+            {steps.map((step, i) => (
+              <li key={step.text} className="flex gap-3 rounded-2xl border border-border/70 bg-background/45 p-3 text-sm text-muted-foreground">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                  <step.icon className="h-4 w-4" />
+                </span>
+                <span className="leading-relaxed"><span className="font-semibold text-foreground">{i + 1}.</span> {step.text}</span>
+              </li>
+            ))}
+          </ol>
         </div>
-        <div>
-          <h2 className="font-display font-semibold">Get Aurora on your TV box</h2>
-          <p className="text-xs text-muted-foreground">Works on onn 4K Pro, Chromecast with Google TV, and any Android TV box — no side-loading tools needed.</p>
+
+        <div className="space-y-3 rounded-3xl border border-border bg-background/55 p-4">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary">TV Mode fallback</p>
+          <div className="flex items-center gap-2 rounded-2xl border border-border bg-background px-4 py-3">
+            <span className="min-w-0 flex-1 truncate font-mono text-sm text-primary md:text-base">{tvUrl}</span>
+            <button onClick={copy} className="shrink-0 rounded-xl p-2 text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary" title="Copy link">
+              {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+            </button>
+          </div>
+          <div className="flex items-center gap-3">
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&bgcolor=0d0a17&color=a78bfa&data=${encodeURIComponent(tvUrl)}`}
+              alt="QR code to open Aurora TV Mode"
+              className="h-20 w-20 rounded-2xl border border-border"
+            />
+            <p className="text-xs leading-relaxed text-muted-foreground">Scan or copy when you want TV Mode without installing the companion app.</p>
+          </div>
+          <Link to="/install" className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
+            Open polished install guide <ChevronRight className="h-4 w-4" />
+          </Link>
         </div>
       </div>
-
-      <ol className="space-y-2.5">
-        {steps.map((step, i) => (
-          <li key={i} className="flex gap-3 text-sm text-muted-foreground">
-            <span className="w-6 h-6 rounded-full bg-primary/15 text-primary text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
-            <span className="leading-relaxed">{step}</span>
-          </li>
-        ))}
-      </ol>
-
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-        <div className="flex-1 flex items-center gap-2 px-4 py-3 rounded-xl bg-background border border-border">
-          <span className="font-mono text-sm md:text-base text-primary truncate flex-1">{tvUrl}</span>
-          <button onClick={copy} className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-all shrink-0" title="Copy link">
-            {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-          </button>
-        </div>
-        <img
-          src={`https://api.qrserver.com/v1/create-qr-code/?size=120x120&bgcolor=0d0a17&color=a78bfa&data=${encodeURIComponent(tvUrl)}`}
-          alt="QR code to open Aurora TV Mode"
-          className="w-24 h-24 rounded-xl border border-border self-center sm:self-auto"
-        />
-      </div>
-      <p className="text-[11px] text-muted-foreground">Tip: the QR code opens TV Mode on your phone — pair it with the code on your TV screen to send channels straight to the big screen.</p>
-      <Link to="/install" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
-        Full step-by-step install guide <ChevronRight className="w-4 h-4" />
-      </Link>
     </div>
   );
 }
