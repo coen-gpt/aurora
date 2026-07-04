@@ -1,0 +1,13 @@
+{
+  "name": "Location",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Location name, e.g. Living Room, Lake House"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

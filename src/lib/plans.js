@@ -1,0 +1,27 @@
+export const PLANS = [
+  {
+    id: 'starter',
+    name: 'Starter',
+    tagline: 'For a single screen',
+    monthly: 4.99,
+    yearly: 49,
+    features: ['1 location', 'Up to 2 devices', 'Playlists & TV guide', 'Send to TV pairing'],
+  },
+  {
+    id: 'family',
+    name: 'Family',
+    tagline: 'Whole-home streaming',
+    monthly: 9.99,
+    yearly: 99,
+    popular: true,
+    features: ['3 locations', 'Up to 8 devices', 'Everything in Starter', 'Lighting scenes & remote', 'Watch history sync'],
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    tagline: 'Power users & installers',
+    monthly: 14.99,
+    yearly: 149,
+    features: ['Unlimited locations', 'Unlimited devices', 'Everything in Family', 'Priority stream relay', 'Early access features'],
+  },
+];

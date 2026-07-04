@@ -1,12 +1,20 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 import Layout from '@/components/Layout';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import ForgotPassword from '@/pages/ForgotPassword';
+import ResetPassword from '@/pages/ResetPassword';
+import Landing from '@/pages/Landing';
+import Pricing from '@/pages/Pricing';
+import Account from '@/pages/Account';
 import Home from '@/pages/Home';
 import Player from '@/pages/Player';
 import Guide from '@/pages/Guide';
@@ -43,16 +51,25 @@ const AuthenticatedApp = () => {
   // Render the main app
   return (
     <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/player" element={<Player />} />
-        <Route path="/guide" element={<Guide />} />
-        <Route path="/mylist" element={<MyList />} />
-        <Route path="/tv" element={<TvMode />} />
-        <Route path="/devices" element={<Devices />} />
-        <Route path="/install" element={<InstallTv />} />
-        <Route path="/remote" element={<Remote />} />
-        <Route path="/lighting" element={<Lighting />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/player" element={<Player />} />
+          <Route path="/guide" element={<Guide />} />
+          <Route path="/mylist" element={<MyList />} />
+          <Route path="/tv" element={<TvMode />} />
+          <Route path="/devices" element={<Devices />} />
+          <Route path="/install" element={<InstallTv />} />
+          <Route path="/remote" element={<Remote />} />
+          <Route path="/lighting" element={<Lighting />} />
+        </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

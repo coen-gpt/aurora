@@ -1,0 +1,43 @@
+{
+  "name": "Subscription",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the subscriber"
+    },
+    "plan_id": {
+      "type": "string",
+      "enum": [
+        "starter",
+        "family",
+        "pro"
+      ],
+      "description": "Aurora plan"
+    },
+    "cycle": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "yearly"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "description": "Stripe subscription status (trialing, active, past_due, canceled...)"
+    },
+    "stripe_customer_id": {
+      "type": "string"
+    },
+    "stripe_subscription_id": {
+      "type": "string"
+    },
+    "current_period_end": {
+      "type": "string",
+      "description": "ISO date when the current billing period ends"
+    }
+  },
+  "required": [
+    "stripe_subscription_id"
+  ]
+}
