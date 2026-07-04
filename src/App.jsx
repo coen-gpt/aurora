@@ -9,6 +9,7 @@ import ScrollToTop from './components/ScrollToTop';
 import Layout from '@/components/Layout';
 import Home from '@/pages/Home';
 import Player from '@/pages/Player';
+import Guide from '@/pages/Guide';
 import Devices from '@/pages/Devices';
 import Remote from '@/pages/Remote';
 import Lighting from '@/pages/Lighting';
@@ -42,6 +43,7 @@ const AuthenticatedApp = () => {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/player" element={<Player />} />
+        <Route path="/guide" element={<Guide />} />
         <Route path="/devices" element={<Devices />} />
         <Route path="/remote" element={<Remote />} />
         <Route path="/lighting" element={<Lighting />} />

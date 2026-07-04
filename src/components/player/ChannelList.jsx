@@ -1,25 +1,50 @@
-import React from 'react';
-import { Star, Tv } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Star, Tv, Play } from 'lucide-react';
+import { nowNext } from '@/lib/iptv';
+import HoverPreview from '@/components/player/HoverPreview';
 
-export default function ChannelList({ channels, favorites, onToggleFav, onSelect, selectedUrl }) {
+export default function ChannelList({ channels, favorites, onToggleFav, onSelect, selectedUrl, guide = {} }) {
+  const [hovered, setHovered] = useState(null);
+  const timer = useRef(null);
+
+  const enter = (url) => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setHovered(url), 700);
+  };
+  const leave = () => {
+    clearTimeout(timer.current);
+    setHovered(null);
+  };
+
   if (channels.length === 0) {
     return <p className="text-sm text-muted-foreground text-center py-12">No channels match your filters.</p>;
   }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2">
       {channels.map((ch) => {
         const isFav = favorites.includes(ch.url);
         const isActive = ch.url === selectedUrl;
+        const { now } = nowNext(guide, ch);
         return (
           <div
             key={ch.url}
             onClick={() => onSelect(ch)}
-            className={`group flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 border ${
+            onMouseEnter={() => enter(ch.url)}
+            onMouseLeave={leave}
+            className={`relative group flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all duration-200 border ${
               isActive
                 ? 'bg-primary/15 border-primary/40'
                 : 'bg-card border-border hover:border-primary/30 hover:bg-secondary'
             }`}
           >
+            {/* Hover live preview (desktop) */}
+            {hovered === ch.url && (
+              <div className="hidden md:block absolute bottom-full left-0 mb-2 z-30 w-64 rounded-xl overflow-hidden shadow-2xl ring-1 ring-primary/40 bg-black">
+                <HoverPreview url={ch.url} />
+                <p className="text-[11px] font-medium px-2.5 py-1.5 truncate bg-card">{ch.name}</p>
+              </div>
+            )}
             <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center overflow-hidden shrink-0">
               {ch.logo ? (
                 <img src={ch.logo} alt="" className="w-full h-full object-contain" loading="lazy" onError={(e) => { e.target.style.display = 'none'; }} />
@@ -29,7 +54,13 @@ export default function ChannelList({ channels, favorites, onToggleFav, onSelect
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-sm font-medium truncate">{ch.name}</p>
-              <p className="text-[11px] text-muted-foreground truncate">{ch.group}</p>
+              {now ? (
+                <p className="text-[11px] text-primary truncate flex items-center gap-1">
+                  <Play className="w-2.5 h-2.5 fill-current shrink-0" /> {now.title}
+                </p>
+              ) : (
+                <p className="text-[11px] text-muted-foreground truncate">{ch.group}</p>
+              )}
             </div>
             <button
               onClick={(e) => { e.stopPropagation(); onToggleFav(ch.url); }}

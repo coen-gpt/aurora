@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Hls from 'hls.js';
-import { Cast, X, Loader2 } from 'lucide-react';
+import { Cast, X, Loader2, PictureInPicture2 } from 'lucide-react';
+import { nowNext } from '@/lib/iptv';
 
-export default function VideoPlayer({ channel, onClose }) {
+export default function VideoPlayer({ channel, guide = {}, onClose }) {
   const videoRef = useRef(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -54,6 +55,16 @@ export default function VideoPlayer({ channel, onClose }) {
     }
   };
 
+  const handlePiP = async () => {
+    const video = videoRef.current;
+    try {
+      if (document.pictureInPictureElement) await document.exitPictureInPicture();
+      else if (video?.requestPictureInPicture) await video.requestPictureInPicture();
+    } catch { /* not supported or blocked */ }
+  };
+
+  const { now } = nowNext(guide, channel);
+
   return (
     <div className="relative rounded-2xl overflow-hidden bg-black aspect-video shadow-[0_0_60px_hsl(var(--primary)/0.2)] ring-1 ring-border">
       <video ref={videoRef} controls playsInline className="w-full h-full" />
@@ -69,9 +80,12 @@ export default function VideoPlayer({ channel, onClose }) {
       )}
       <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2">
         <span className="px-3 py-1.5 rounded-full bg-black/60 backdrop-blur text-xs font-medium text-white truncate max-w-[60%]">
-          {channel.name}
+          {channel.name}{now ? ` · ${now.title}` : ''}
         </span>
         <div className="flex gap-2">
+          <button onClick={handlePiP} className="p-2 rounded-full bg-black/60 backdrop-blur text-white hover:bg-primary transition-colors" title="Picture-in-picture">
+            <PictureInPicture2 className="w-4 h-4" />
+          </button>
           <button onClick={handleCast} className="p-2 rounded-full bg-black/60 backdrop-blur text-white hover:bg-primary transition-colors" title="Cast to device">
             <Cast className="w-4 h-4" />
           </button>

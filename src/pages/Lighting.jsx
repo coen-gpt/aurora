@@ -66,19 +66,19 @@ export default function Lighting() {
           <div
             key={light.id}
             className="p-5 rounded-2xl bg-card border border-border space-y-4 transition-shadow"
-            style={light.on ? { boxShadow: `0 0 40px ${light.color}22` } : undefined}
+            style={light.on ? { boxShadow: `0 0 40px ${light.color || '#8B5CF6'}22` } : undefined}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center transition-all"
-                  style={{ backgroundColor: light.on ? `${light.color}30` : undefined }}
+                  style={{ backgroundColor: light.on ? `${light.color || '#8B5CF6'}30` : undefined }}
                 >
-                  <Lightbulb className="w-5 h-5" style={{ color: light.on ? light.color : 'hsl(var(--muted-foreground))' }} />
+                  <Lightbulb className="w-5 h-5" style={{ color: light.on ? (light.color || '#8B5CF6') : 'hsl(var(--muted-foreground))' }} />
                 </div>
                 <div>
                   <p className="text-sm font-medium">{light.name}</p>
-                  <p className="text-xs text-muted-foreground">{light.room} · {light.on ? `${light.brightness}%` : 'Off'}</p>
+                  <p className="text-xs text-muted-foreground">{light.room} · {light.on ? `${light.brightness ?? 80}%` : 'Off'}</p>
                 </div>
               </div>
               <Switch checked={!!light.on} onCheckedChange={(v) => updateLight(light.id, { on: v })} />
@@ -87,7 +87,7 @@ export default function Lighting() {
             {light.on && (
               <>
                 <Slider
-                  value={[light.brightness]}
+                  value={[light.brightness ?? 80]}
                   min={1}
                   max={100}
                   step={1}
