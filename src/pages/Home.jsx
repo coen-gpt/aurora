@@ -4,7 +4,7 @@ import { load } from '@/lib/storage';
 import { pullRecents } from '@/lib/recents';
 import { getMyList } from '@/lib/mylist';
 import ChannelRow from '@/components/home/ChannelRow';
-import { Tv, Radio, Gamepad2, Lightbulb, Play, Plus, ShieldCheck, ChevronRight } from 'lucide-react';
+import { Tv, Radio, Gamepad2, Lightbulb, Play, Plus, ShieldCheck, ChevronRight, MonitorPlay } from 'lucide-react';
 
 const LOGO = 'https://media.base44.com/images/public/6a485551f0d60c9fa95dcd18/8f526db81_generated_image.png';
 
@@ -12,6 +12,7 @@ const hubs = [
   { to: '/devices', title: 'Device Hub', desc: 'Pair & manage devices', icon: Radio, gradient: 'from-blue-600 to-cyan-500' },
   { to: '/remote', title: 'Remote', desc: 'One remote for everything', icon: Gamepad2, gradient: 'from-emerald-600 to-teal-500' },
   { to: '/lighting', title: 'Lighting', desc: 'Scenes & mood control', icon: Lightbulb, gradient: 'from-amber-500 to-orange-500' },
+  { to: '/install', title: 'Install on TV', desc: 'Step-by-step guide for onn 4K Pro & Android TV boxes', icon: MonitorPlay, gradient: 'from-violet-600 to-fuchsia-500' },
 ];
 
 export default function Home() {
@@ -75,7 +76,7 @@ export default function Home() {
         {/* Control hubs */}
         <section className="space-y-3 px-4 md:px-8">
           <h2 className="font-display text-lg font-bold tracking-tight">Your Command Center</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {hubs.map((c) => (
               <Link
                 key={c.to}
