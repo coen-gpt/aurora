@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { load, save } from '@/lib/storage';
+import { pKey } from '@/lib/profiles';
 import { addRecent } from '@/lib/recents';
+import HealthCheck from '@/components/player/HealthCheck';
 import { loadChannels, loadEpg } from '@/lib/iptv';
 import VideoPlayer from '@/components/player/VideoPlayer';
 import ChannelList from '@/components/player/ChannelList';
@@ -14,7 +16,8 @@ import { Search, Loader2, Star, Tv, MonitorPlay, Gauge, Rows3 } from 'lucide-rea
 export default function Player() {
   const [playlists, setPlaylists] = useState(() => load('iptv_playlists', []));
   const [activeId, setActiveId] = useState(() => load('iptv_active_playlist', null));
-  const [favorites, setFavorites] = useState(() => load('iptv_favorites', []));
+  const [favorites, setFavorites] = useState(() => load(pKey('iptv_favorites'), []));
+  const [hiddenUrls, setHiddenUrls] = useState(() => load('dead_channels', []));
   const location = useLocation();
   const [channels, setChannels] = useState([]);
   const [guide, setGuide] = useState({});
@@ -29,7 +32,7 @@ export default function Player() {
 
   useEffect(() => { save('iptv_playlists', playlists); }, [playlists]);
   useEffect(() => { save('iptv_active_playlist', activeId); }, [activeId]);
-  useEffect(() => { save('iptv_favorites', favorites); }, [favorites]);
+  useEffect(() => { save(pKey('iptv_favorites'), favorites); }, [favorites]);
   useEffect(() => { if (location.state?.search != null) setSearch(location.state.search); }, [location.state]);
 
   useEffect(() => {
@@ -65,11 +68,21 @@ export default function Player() {
 
   const filtered = useMemo(() => {
     let list = channels;
+    if (hiddenUrls.length) {
+      const dead = new Set(hiddenUrls);
+      list = list.filter((c) => !dead.has(c.url));
+    }
     if (favsOnly) list = list.filter((c) => favorites.includes(c.url));
     if (group !== 'All') list = list.filter((c) => c.group === group);
     if (search) list = list.filter((c) => c.name.toLowerCase().includes(search.toLowerCase()));
     return list.slice(0, 500);
-  }, [channels, group, search, favsOnly, favorites]);
+  }, [channels, group, search, favsOnly, favorites, hiddenUrls]);
+
+  const handleHide = (urls) => {
+    const next = urls ? [...new Set([...hiddenUrls, ...urls])] : [];
+    setHiddenUrls(next);
+    save('dead_channels', next);
+  };
 
   const addPlaylist = (data) => {
     const pl = { id: Date.now().toString(36), ...data };
@@ -115,6 +128,12 @@ export default function Player() {
         onSelect={setActiveId}
         onUpdate={updatePlaylist}
       />
+
+      {channels.length > 0 && !loading && (
+        <div className="flex justify-end">
+          <HealthCheck channels={channels} hiddenCount={hiddenUrls.length} onHide={handleHide} />
+        </div>
+      )}
 
       {current && (
         <div className="space-y-2 lg:sticky lg:top-20 lg:z-20">

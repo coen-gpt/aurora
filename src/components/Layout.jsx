@@ -3,6 +3,9 @@ import { Outlet, NavLink, Link } from 'react-router-dom';
 import { Home, Tv, Radio, Gamepad2, Lightbulb, CalendarClock, Bookmark, UserCircle, Search as SearchIcon } from 'lucide-react';
 import VoiceControl from '@/components/voice/VoiceControl';
 import NavVoiceSearch from '@/components/nav/NavVoiceSearch';
+import ProfileSwitcher from '@/components/nav/ProfileSwitcher';
+import ReminderWatcher from '@/components/reminders/ReminderWatcher';
+import Onboarding from '@/components/onboarding/Onboarding';
 
 const LOGO = 'https://media.base44.com/images/public/6a485551f0d60c9fa95dcd18/8f526db81_generated_image.png';
 
@@ -59,6 +62,7 @@ export default function Layout() {
             </NavLink>
             <NavVoiceSearch />
             <VoiceControl />
+            <ProfileSwitcher />
             <NavLink
               to="/account"
               className={({ isActive }) =>
@@ -75,6 +79,9 @@ export default function Layout() {
       <main className="pb-20 md:pb-8">
         <Outlet />
       </main>
+
+      <ReminderWatcher />
+      <Onboarding />
 
       {/* Mobile bottom tabs */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-card/90 backdrop-blur-xl border-t border-border flex justify-around px-2 py-1">

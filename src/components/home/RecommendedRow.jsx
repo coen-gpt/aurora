@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { load } from '@/lib/storage';
+import { pKey } from '@/lib/profiles';
 import { loadChannels } from '@/lib/iptv';
 import { topGroups } from '@/lib/stats';
 import ChannelRow from '@/components/home/ChannelRow';
@@ -17,7 +18,7 @@ export default function RecommendedRow() {
     loadChannels(pl)
       .then(({ channels }) => {
         if (cancelled) return;
-        const recentUrls = new Set(load('iptv_recent', []).map((r) => r.url));
+        const recentUrls = new Set(load(pKey('iptv_recent'), []).map((r) => r.url));
         const picks = channels.filter((c) => c.group === top.group && !recentUrls.has(c.url)).slice(0, 12);
         if (picks.length > 0) setRow({ group: top.group, channels: picks });
       })

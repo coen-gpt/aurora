@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { load } from '@/lib/storage';
+import { pKey } from '@/lib/profiles';
 import { loadChannels, loadEpg, getEpgUrl, fmtTime } from '@/lib/iptv';
 import { getMyList } from '@/lib/mylist';
 import { unifiedSearch } from '@/lib/search';
@@ -45,8 +46,8 @@ export default function SearchPage() {
         channels,
         guide,
         myList: getMyList(),
-        recents: load('iptv_recent', []),
-        favorites: load('iptv_favorites', []),
+        recents: load(pKey('iptv_recent'), []),
+        favorites: load(pKey('iptv_favorites'), []),
       }),
     [query, channels, guide]
   );

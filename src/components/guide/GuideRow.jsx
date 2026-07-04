@@ -1,9 +1,12 @@
-import React from 'react';
-import { Tv, Play } from 'lucide-react';
+import React, { useState } from 'react';
+import { Tv, Play, Bell } from 'lucide-react';
 import { fmtTime } from '@/lib/iptv';
+import { getReminders, isReminded, toggleReminder } from '@/lib/reminders';
 
 export default function GuideRow({ channel, now, next, onPlay }) {
   const progress = now ? Math.min(100, Math.max(0, ((Date.now() - now.start) / (now.stop - now.start)) * 100)) : 0;
+  const [reminders, setReminders] = useState(getReminders);
+  const nextReminded = next ? isReminded(reminders, channel.url, next.start) : false;
 
   return (
     <div
@@ -49,8 +52,16 @@ export default function GuideRow({ channel, now, next, onPlay }) {
               />
             </div>
             {next && (
-              <p className="text-[11px] text-muted-foreground truncate mt-2">
-                <span className="text-foreground/60 font-medium">Up next:</span> {next.title} · {fmtTime(next.start)}
+              <p className="text-[11px] text-muted-foreground truncate mt-2 flex items-center gap-1.5">
+                <span className="text-foreground/60 font-medium shrink-0">Up next:</span>
+                <span className="truncate">{next.title} · {fmtTime(next.start)}</span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setReminders(toggleReminder(channel, next)); }}
+                  className={`p-1 rounded-full shrink-0 transition-colors ${nextReminded ? 'text-primary' : 'text-muted-foreground/50 hover:text-primary'}`}
+                  title={nextReminded ? 'Remove reminder' : 'Remind me when this starts'}
+                >
+                  <Bell className={`w-3.5 h-3.5 ${nextReminded ? 'fill-current' : ''}`} />
+                </button>
               </p>
             )}
           </>

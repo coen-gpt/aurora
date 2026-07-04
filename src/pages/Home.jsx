@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { load } from '@/lib/storage';
+import { pKey } from '@/lib/profiles';
 import { pullRecents } from '@/lib/recents';
 import { getMyList } from '@/lib/mylist';
 import ChannelRow from '@/components/home/ChannelRow';
@@ -17,7 +18,7 @@ const hubs = [
 ];
 
 export default function Home() {
-  const [recents, setRecents] = useState(() => load('iptv_recent', []));
+  const [recents, setRecents] = useState(() => load(pKey('iptv_recent'), []));
   useEffect(() => {
     pullRecents().then(setRecents);
     const t = setInterval(() => pullRecents().then(setRecents), 60000);
@@ -28,7 +29,7 @@ export default function Home() {
 
   // Favorites row: saved shows (My List) + pinned channels resolved from locally known items
   const myList = getMyList();
-  const favUrls = load('iptv_favorites', []);
+  const favUrls = load(pKey('iptv_favorites'), []);
   const known = [...myList, ...recents];
   const pinned = favUrls
     .map((u) => known.find((c) => c.url === u))

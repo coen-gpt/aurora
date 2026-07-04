@@ -1,9 +1,11 @@
-import React from 'react';
-import { Tv } from 'lucide-react';
+import React, { useState } from 'react';
+import { Tv, Bell } from 'lucide-react';
 import { fmtTime } from '@/lib/iptv';
+import { getReminders, isReminded, toggleReminder } from '@/lib/reminders';
 
 export default function TimelineRow({ channel, programs, windowStart, windowEnd, pxPerMin, nowTs, onPlay }) {
   const visible = programs.filter((p) => p.stop > windowStart && p.start < windowEnd);
+  const [reminders, setReminders] = useState(getReminders);
 
   return (
     <div className="flex h-16 border-b border-border/60">
@@ -29,17 +31,24 @@ export default function TimelineRow({ channel, programs, windowStart, windowEnd,
           const start = Math.max(p.start, windowStart);
           const stop = Math.min(p.stop, windowEnd);
           const live = p.start <= nowTs && p.stop > nowTs;
+          const future = p.start > nowTs;
+          const reminded = future && isReminded(reminders, channel.url, p.start);
           return (
             <button
               key={i}
-              onClick={onPlay}
-              title={`${p.title} · ${fmtTime(p.start)} – ${fmtTime(p.stop)}`}
+              onClick={future ? () => setReminders(toggleReminder(channel, p)) : onPlay}
+              title={future
+                ? `${p.title} · ${fmtTime(p.start)} – ${fmtTime(p.stop)} — tap to ${reminded ? 'remove the reminder' : 'set a reminder'}`
+                : `${p.title} · ${fmtTime(p.start)} – ${fmtTime(p.stop)}`}
               style={{ left: ((start - windowStart) / 60000) * pxPerMin, width: Math.max(((stop - start) / 60000) * pxPerMin - 2, 24) }}
               className={`absolute top-1.5 bottom-1.5 rounded-md px-2 text-left overflow-hidden border transition-colors ${
                 live ? 'bg-primary/20 border-primary/50' : 'bg-secondary/60 border-border hover:border-primary/40'
               }`}
             >
-              <span className={`block text-[11px] font-medium truncate ${live ? 'text-primary-foreground' : ''}`}>{p.title}</span>
+              <span className={`flex items-center gap-1 text-[11px] font-medium truncate ${live ? 'text-primary-foreground' : ''}`}>
+                {reminded && <Bell className="w-3 h-3 fill-current text-primary shrink-0" />}
+                <span className="truncate">{p.title}</span>
+              </span>
               <span className="block text-[10px] text-muted-foreground truncate">{fmtTime(p.start)} – {fmtTime(p.stop)}</span>
             </button>
           );
