@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { load, save } from '@/lib/storage';
 import PairingModal from '@/components/devices/PairingModal';
 import InstallOnTv from '@/components/devices/InstallOnTv';
+import UpgradePrompt from '@/components/devices/UpgradePrompt';
+import { getSubscription, getDeviceLimit } from '@/lib/subscription';
+import { PLANS } from '@/lib/plans';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Tv, Speaker, MonitorPlay, Lightbulb, Plus, Trash2, Radio } from 'lucide-react';
@@ -12,8 +15,18 @@ const typeLabels = { tv: 'TV', soundbar: 'Soundbar', streaming: 'Streaming Devic
 export default function Devices() {
   const [devices, setDevices] = useState(() => load('hub_devices', []));
   const [pairing, setPairing] = useState(false);
+  const [sub, setSub] = useState(null);
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   useEffect(() => { save('hub_devices', devices); }, [devices]);
+  useEffect(() => { getSubscription().then(setSub); }, []);
+
+  const limit = getDeviceLimit(sub);
+  const planName = (sub && PLANS.find((p) => p.id === sub.plan_id)?.name) || 'Starter';
+  const startPairing = () => {
+    if (devices.length >= limit) setUpgradeOpen(true);
+    else setPairing(true);
+  };
 
   const toggleConnected = (id) =>
     setDevices((prev) => prev.map((d) => (d.id === id ? { ...d, connected: !d.connected } : d)));
@@ -26,9 +39,14 @@ export default function Devices() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight">Device Hub</h1>
-          <p className="text-sm text-muted-foreground mt-1">Pair and manage your home entertainment devices.</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Pair and manage your home entertainment devices.
+            {Number.isFinite(limit) && (
+              <span className="ml-1 text-xs">({devices.length} of {limit} on your {planName} plan)</span>
+            )}
+          </p>
         </div>
-        <Button onClick={() => setPairing(true)}>
+        <Button onClick={startPairing}>
           <Plus className="w-4 h-4 mr-1.5" /> Pair Device
         </Button>
       </div>
@@ -85,8 +103,10 @@ export default function Devices() {
       <PairingModal
         open={pairing}
         onClose={() => setPairing(false)}
-        onPaired={(device) => setDevices((prev) => [...prev, device])}
+        onPaired={(device) => setDevices((prev) => (prev.length >= limit ? prev : [...prev, device]))}
       />
+
+      <UpgradePrompt open={upgradeOpen} onClose={() => setUpgradeOpen(false)} limit={limit} planName={planName} />
     </div>
   );
 }

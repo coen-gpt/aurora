@@ -4,6 +4,7 @@ import { load } from '@/lib/storage';
 import { pullRecents } from '@/lib/recents';
 import { getMyList } from '@/lib/mylist';
 import ChannelRow from '@/components/home/ChannelRow';
+import RecommendedRow from '@/components/home/RecommendedRow';
 import { Tv, Radio, Gamepad2, Lightbulb, Play, Plus, ShieldCheck, ChevronRight, MonitorPlay } from 'lucide-react';
 
 const LOGO = 'https://media.base44.com/images/public/6a485551f0d60c9fa95dcd18/8f526db81_generated_image.png';
@@ -76,6 +77,9 @@ export default function Home() {
 
         {/* Continue watching */}
         <ChannelRow title="Continue Watching" channels={recents} />
+
+        {/* Because you watch X */}
+        <RecommendedRow />
 
         {/* Control hubs */}
         <section className="space-y-3 px-4 md:px-8">

@@ -5,6 +5,7 @@ import { getSubscription } from '@/lib/subscription';
 import { PLANS } from '@/lib/plans';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
+import BackupRestore from '@/components/account/BackupRestore';
 import { UserCircle, CreditCard, LogOut, Loader2, BadgeCheck } from 'lucide-react';
 
 export default function Account() {
@@ -95,6 +96,8 @@ export default function Account() {
           </Button>
         </div>
       </div>
+
+      <BackupRestore />
 
       <Button variant="ghost" className="text-muted-foreground" onClick={() => base44.auth.logout('/')}>
         <LogOut className="w-4 h-4" /> Log out

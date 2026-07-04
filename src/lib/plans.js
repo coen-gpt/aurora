@@ -5,6 +5,7 @@ export const PLANS = [
     tagline: 'For a single screen',
     monthly: 4.99,
     yearly: 49,
+    deviceLimit: 2,
     features: ['1 location', 'Up to 2 devices', 'Playlists & TV guide', 'Send to TV pairing'],
   },
   {
@@ -14,6 +15,7 @@ export const PLANS = [
     monthly: 9.99,
     yearly: 99,
     popular: true,
+    deviceLimit: 8,
     features: ['3 locations', 'Up to 8 devices', 'Everything in Starter', 'Lighting scenes & remote', 'Watch history sync'],
   },
   {
@@ -22,6 +24,7 @@ export const PLANS = [
     tagline: 'Power users & installers',
     monthly: 14.99,
     yearly: 149,
+    deviceLimit: Infinity,
     features: ['Unlimited locations', 'Unlimited devices', 'Everything in Family', 'Priority stream relay', 'Early access features'],
   },
 ];

@@ -1,5 +1,6 @@
 import { base44 } from '@/api/base44Client';
 import { load, save } from '@/lib/storage';
+import { recordWatch } from '@/lib/stats';
 
 const KEY = 'iptv_recent';
 
@@ -29,6 +30,7 @@ export async function pullRecents() {
 
 // Record a watch locally and sync it to the account so other devices see it.
 export function addRecent(channel) {
+  recordWatch(channel);
   const entry = { name: channel.name, url: channel.url, logo: channel.logo || '', group: channel.group || '', tvg_id: channel.tvg_id || '', watched_at: Date.now() };
   const list = merge([entry], load(KEY, []));
   save(KEY, list);

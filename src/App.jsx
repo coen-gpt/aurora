@@ -16,6 +16,7 @@ import Landing from '@/pages/Landing';
 import Pricing from '@/pages/Pricing';
 import Account from '@/pages/Account';
 import Home from '@/pages/Home';
+import SearchPage from '@/pages/SearchPage';
 import Player from '@/pages/Player';
 import Guide from '@/pages/Guide';
 import MyList from '@/pages/MyList';
@@ -60,6 +61,7 @@ const AuthenticatedApp = () => {
         <Route path="/pricing" element={<Pricing />} />
         <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
           <Route path="/home" element={<Home />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/account" element={<Account />} />
           <Route path="/player" element={<Player />} />
           <Route path="/guide" element={<Guide />} />

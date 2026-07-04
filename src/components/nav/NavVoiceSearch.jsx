@@ -24,7 +24,7 @@ export default function NavVoiceSearch() {
     rec.lang = navigator.language || 'en-US';
     rec.onresult = (e) => {
       const text = e.results[0][0].transcript.trim();
-      if (text) navigate('/player', { state: { search: text } });
+      if (text) navigate('/search', { state: { q: text } });
     };
     rec.onend = () => setListening(false);
     rec.onerror = () => setListening(false);

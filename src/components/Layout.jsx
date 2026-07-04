@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, NavLink, Link } from 'react-router-dom';
-import { Home, Tv, Radio, Gamepad2, Lightbulb, CalendarClock, Bookmark, UserCircle } from 'lucide-react';
+import { Home, Tv, Radio, Gamepad2, Lightbulb, CalendarClock, Bookmark, UserCircle, Search as SearchIcon } from 'lucide-react';
 import VoiceControl from '@/components/voice/VoiceControl';
 import NavVoiceSearch from '@/components/nav/NavVoiceSearch';
 
@@ -48,6 +48,15 @@ export default function Layout() {
                 </NavLink>
               ))}
             </nav>
+            <NavLink
+              to="/search"
+              className={({ isActive }) =>
+                `p-2 rounded-full transition-colors ${isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`
+              }
+              aria-label="Search"
+            >
+              <SearchIcon className="w-5 h-5" />
+            </NavLink>
             <NavVoiceSearch />
             <VoiceControl />
             <NavLink
