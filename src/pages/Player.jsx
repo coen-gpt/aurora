@@ -15,21 +15,22 @@ export default function Player() {
   const [playlists, setPlaylists] = useState(() => load('iptv_playlists', []));
   const [activeId, setActiveId] = useState(() => load('iptv_active_playlist', null));
   const [favorites, setFavorites] = useState(() => load('iptv_favorites', []));
+  const location = useLocation();
   const [channels, setChannels] = useState([]);
   const [guide, setGuide] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(location.state?.search || '');
   const [group, setGroup] = useState('All');
   const [favsOnly, setFavsOnly] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
-  const location = useLocation();
   const [current, setCurrent] = useState(location.state?.channel || null);
   const [infoChannel, setInfoChannel] = useState(null);
 
   useEffect(() => { save('iptv_playlists', playlists); }, [playlists]);
   useEffect(() => { save('iptv_active_playlist', activeId); }, [activeId]);
   useEffect(() => { save('iptv_favorites', favorites); }, [favorites]);
+  useEffect(() => { if (location.state?.search != null) setSearch(location.state.search); }, [location.state]);
 
   useEffect(() => {
     const pl = load('iptv_playlists', []).find((p) => p.id === activeId);

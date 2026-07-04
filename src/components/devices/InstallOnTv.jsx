@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MonitorPlay, Copy, Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { MonitorPlay, Copy, Check, ChevronRight } from 'lucide-react';
 
 const steps = [
   'On your streaming box (onn 4K Pro, Chromecast, or any Google TV), open the Play Store and install any web browser — "TV Bro" is free and works great with a remote.',
@@ -53,6 +54,9 @@ export default function InstallOnTv() {
         />
       </div>
       <p className="text-[11px] text-muted-foreground">Tip: the QR code opens TV Mode on your phone — pair it with the code on your TV screen to send channels straight to the big screen.</p>
+      <Link to="/install" className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+        Full step-by-step install guide <ChevronRight className="w-4 h-4" />
+      </Link>
     </div>
   );
 }

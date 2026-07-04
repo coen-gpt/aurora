@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet, NavLink, Link } from 'react-router-dom';
 import { Home, Tv, Radio, Gamepad2, Lightbulb, CalendarClock, Bookmark } from 'lucide-react';
 import VoiceControl from '@/components/voice/VoiceControl';
+import NavVoiceSearch from '@/components/nav/NavVoiceSearch';
 
 const LOGO = 'https://media.base44.com/images/public/6a485551f0d60c9fa95dcd18/8f526db81_generated_image.png';
 
@@ -47,6 +48,7 @@ export default function Layout() {
                 </NavLink>
               ))}
             </nav>
+            <NavVoiceSearch />
             <VoiceControl />
           </div>
         </div>

@@ -13,6 +13,7 @@ import Guide from '@/pages/Guide';
 import MyList from '@/pages/MyList';
 import TvMode from '@/pages/TvMode';
 import Devices from '@/pages/Devices';
+import InstallTv from '@/pages/InstallTv';
 import Remote from '@/pages/Remote';
 import Lighting from '@/pages/Lighting';
 
@@ -49,6 +50,7 @@ const AuthenticatedApp = () => {
         <Route path="/mylist" element={<MyList />} />
         <Route path="/tv" element={<TvMode />} />
         <Route path="/devices" element={<Devices />} />
+        <Route path="/install" element={<InstallTv />} />
         <Route path="/remote" element={<Remote />} />
         <Route path="/lighting" element={<Lighting />} />
       </Route>
