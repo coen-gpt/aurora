@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { load } from '@/lib/storage';
 import { pullRecents } from '@/lib/recents';
+import { getMyList } from '@/lib/mylist';
 import ChannelRow from '@/components/home/ChannelRow';
 import { Tv, Radio, Gamepad2, Lightbulb, Play, Plus, ShieldCheck, ChevronRight } from 'lucide-react';
 
@@ -18,6 +19,16 @@ export default function Home() {
   useEffect(() => { pullRecents().then(setRecents); }, []);
   const playlists = load('iptv_playlists', []);
   const devices = load('hub_devices', []);
+
+  // Favorites row: saved shows (My List) + pinned channels resolved from locally known items
+  const myList = getMyList();
+  const favUrls = load('iptv_favorites', []);
+  const known = [...myList, ...recents];
+  const pinned = favUrls
+    .map((u) => known.find((c) => c.url === u))
+    .filter((c) => c && !myList.some((m) => m.url === c.url));
+  const favoritesRow = [...myList, ...pinned];
+
   const connected = devices.filter((d) => d.connected).length;
 
   return (
@@ -55,6 +66,9 @@ export default function Home() {
       </div>
 
       <div className="max-w-7xl mx-auto space-y-8">
+        {/* Favorites & saved shows */}
+        <ChannelRow title="Favorites" channels={favoritesRow} />
+
         {/* Continue watching */}
         <ChannelRow title="Continue Watching" channels={recents} />
 

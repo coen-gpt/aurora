@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, NavLink, Link } from 'react-router-dom';
 import { Home, Tv, Radio, Gamepad2, Lightbulb, CalendarClock, Bookmark } from 'lucide-react';
+import VoiceControl from '@/components/voice/VoiceControl';
 
 const LOGO = 'https://media.base44.com/images/public/6a485551f0d60c9fa95dcd18/8f526db81_generated_image.png';
 
@@ -38,13 +39,16 @@ export default function Layout() {
               AURORA
             </span>
           </Link>
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <NavLink key={item.to} to={item.to} className={topLinkClass} end={item.to === '/'}>
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
+          <div className="flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-1">
+              {navItems.map((item) => (
+                <NavLink key={item.to} to={item.to} className={topLinkClass} end={item.to === '/'}>
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
+            <VoiceControl />
+          </div>
         </div>
       </header>
 
