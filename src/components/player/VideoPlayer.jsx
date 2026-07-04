@@ -18,22 +18,40 @@ export default function VideoPlayer({ channel, guide = {}, onClose }) {
     const onPlaying = () => setLoading(false);
     video.addEventListener('playing', onPlaying);
 
+    // http:// streams are blocked on an https app (mixed content) and many IPTV
+    // servers block browsers with CORS — relay those through our backend.
+    const proxied = `/functions/streamProxy?url=${encodeURIComponent(channel.url)}`;
+    const mustProxy = channel.url.startsWith('http:');
+
     if (Hls.isSupported()) {
-      hls = new Hls({ maxBufferLength: 30 });
-      hls.loadSource(channel.url);
-      hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-      hls.on(Hls.Events.ERROR, (_e, data) => {
-        if (data.fatal) {
-          setLoading(false);
-          setError('This stream could not be played. It may be offline or geo-restricted.');
+      const start = (src, allowFallback) => {
+        hls = new Hls({ maxBufferLength: 30 });
+        hls.loadSource(src);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
+        hls.on(Hls.Events.ERROR, (_e, data) => {
+          if (!data.fatal) return;
           hls.destroy();
-        }
-      });
+          if (allowFallback) {
+            start(proxied, false);
+          } else {
+            setLoading(false);
+            setError('This stream could not be played. It may be offline or geo-restricted.');
+          }
+        });
+      };
+      start(mustProxy ? proxied : channel.url, !mustProxy);
     } else {
-      video.src = channel.url;
+      let triedProxy = mustProxy;
+      video.src = mustProxy ? proxied : channel.url;
       video.play().catch(() => {});
       video.onerror = () => {
+        if (!triedProxy) {
+          triedProxy = true;
+          video.src = proxied;
+          video.play().catch(() => {});
+          return;
+        }
         setLoading(false);
         setError('This stream could not be played on this device.');
       };
