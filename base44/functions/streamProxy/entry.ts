@@ -15,11 +15,15 @@ Deno.serve(async (req) => {
       return new Response('Missing or invalid url parameter', { status: 400, headers: cors });
     }
 
-    const headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' };
+    const headers = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': '*/*',
+      'Icy-MetaData': '1',
+    };
     const range = req.headers.get('range');
     if (range) headers['Range'] = range;
 
-    const upstream = await fetch(target, { headers });
+    const upstream = await fetch(target, { headers, redirect: 'follow' });
     if (!upstream.ok && upstream.status !== 206) {
       return new Response(`Upstream returned ${upstream.status}`, { status: 502, headers: cors });
     }
@@ -53,12 +57,12 @@ Deno.serve(async (req) => {
         })
         .join('\n');
       return new Response(rewritten, {
-        headers: { ...cors, 'Content-Type': 'application/vnd.apple.mpegurl' },
+        headers: { ...cors, 'Content-Type': 'application/vnd.apple.mpegurl', 'Cache-Control': 'no-store' },
       });
     }
 
     // Stream media bytes straight through
-    const outHeaders = { ...cors, 'Content-Type': ct || 'video/mp2t' };
+    const outHeaders = { ...cors, 'Content-Type': ct || 'video/mp2t', 'Accept-Ranges': 'bytes', 'Cache-Control': 'no-store' };
     const len = upstream.headers.get('content-length');
     if (len) outHeaders['Content-Length'] = len;
     const contentRange = upstream.headers.get('content-range');
