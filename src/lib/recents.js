@@ -32,6 +32,13 @@ export function addRecent(channel) {
   const entry = { name: channel.name, url: channel.url, logo: channel.logo || '', group: channel.group || '', tvg_id: channel.tvg_id || '', watched_at: Date.now() };
   const list = merge([entry], load(KEY, []));
   save(KEY, list);
-  base44.auth.updateMe({ iptv_recent: list }).catch(() => {});
+  // Merge with the account copy first so watches from other devices are never overwritten.
+  base44.auth.me()
+    .then((me) => {
+      const merged = merge(list, me?.iptv_recent || []);
+      save(KEY, merged);
+      return base44.auth.updateMe({ iptv_recent: merged });
+    })
+    .catch(() => {});
   return list;
 }

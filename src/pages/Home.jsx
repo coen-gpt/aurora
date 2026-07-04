@@ -17,7 +17,11 @@ const hubs = [
 
 export default function Home() {
   const [recents, setRecents] = useState(() => load('iptv_recent', []));
-  useEffect(() => { pullRecents().then(setRecents); }, []);
+  useEffect(() => {
+    pullRecents().then(setRecents);
+    const t = setInterval(() => pullRecents().then(setRecents), 60000);
+    return () => clearInterval(t);
+  }, []);
   const playlists = load('iptv_playlists', []);
   const devices = load('hub_devices', []);
 
