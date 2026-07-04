@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import VideoPlayer from '@/components/player/VideoPlayer';
 import { load, save } from '@/lib/storage';
+import { addRecent } from '@/lib/recents';
 import { Loader2, Smartphone, Tv } from 'lucide-react';
 
 const makeCode = () => {
@@ -44,6 +45,7 @@ export default function TvMode() {
     const unsubscribe = base44.entities.SyncSession.subscribe((event) => {
       if (event.type === 'update' && event.data?.id === session.id && event.data.channel?.url) {
         setChannel(event.data.channel);
+        addRecent(event.data.channel);
       }
     });
     return unsubscribe;

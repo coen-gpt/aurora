@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { load, save } from '@/lib/storage';
+import { addRecent } from '@/lib/recents';
 import { loadChannels, loadEpg } from '@/lib/iptv';
 import VideoPlayer from '@/components/player/VideoPlayer';
 import ChannelList from '@/components/player/ChannelList';
@@ -56,8 +57,7 @@ export default function Player() {
 
   const playChannel = (ch) => {
     setCurrent(ch);
-    const recents = load('iptv_recent', []).filter((r) => r.url !== ch.url);
-    save('iptv_recent', [ch, ...recents].slice(0, 12));
+    addRecent(ch);
   };
 
   const groups = useMemo(() => ['All', ...new Set(channels.map((c) => c.group))], [channels]);

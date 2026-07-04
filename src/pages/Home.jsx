@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { load } from '@/lib/storage';
+import { pullRecents } from '@/lib/recents';
 import ChannelRow from '@/components/home/ChannelRow';
 import { Tv, Radio, Gamepad2, Lightbulb, Play, Plus, ShieldCheck, ChevronRight } from 'lucide-react';
 
@@ -13,7 +14,8 @@ const hubs = [
 ];
 
 export default function Home() {
-  const recents = load('iptv_recent', []);
+  const [recents, setRecents] = useState(() => load('iptv_recent', []));
+  useEffect(() => { pullRecents().then(setRecents); }, []);
   const playlists = load('iptv_playlists', []);
   const devices = load('hub_devices', []);
   const connected = devices.filter((d) => d.connected).length;
