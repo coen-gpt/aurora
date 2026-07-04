@@ -1,21 +1,23 @@
 import React from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, Link } from 'react-router-dom';
 import { Home, Tv, Radio, Gamepad2, Lightbulb } from 'lucide-react';
+
+const LOGO = 'https://media.base44.com/images/public/6a485551f0d60c9fa95dcd18/8f526db81_generated_image.png';
 
 const navItems = [
   { to: '/', label: 'Home', icon: Home },
-  { to: '/player', label: 'Player', icon: Tv },
+  { to: '/player', label: 'Watch', icon: Tv },
   { to: '/devices', label: 'Devices', icon: Radio },
   { to: '/remote', label: 'Remote', icon: Gamepad2 },
   { to: '/lighting', label: 'Lighting', icon: Lightbulb },
 ];
 
 export default function Layout() {
-  const linkClass = ({ isActive }) =>
-    `flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+  const topLinkClass = ({ isActive }) =>
+    `px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
       isActive
-        ? 'bg-primary/15 text-primary shadow-[0_0_20px_hsl(var(--primary)/0.15)]'
-        : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+        ? 'bg-primary/15 text-primary'
+        : 'text-muted-foreground hover:text-foreground'
     }`;
 
   const mobileLinkClass = ({ isActive }) =>
@@ -24,31 +26,31 @@ export default function Layout() {
     }`;
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex">
-      {/* Desktop sidebar */}
-      <aside className="hidden md:flex flex-col w-60 border-r border-border p-4 gap-1 sticky top-0 h-screen">
-        <div className="flex items-center gap-2.5 px-3 py-4 mb-4">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-fuchsia-500 flex items-center justify-center shadow-[0_0_24px_hsl(var(--primary)/0.4)]">
-            <Tv className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <p className="font-display font-bold text-lg leading-none tracking-tight">StreamHub</p>
-            <p className="text-[10px] text-muted-foreground mt-1 tracking-widest uppercase">Media Center</p>
-          </div>
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Top nav — Netflix-style translucent bar */}
+      <header className="sticky top-0 z-50 bg-background/70 backdrop-blur-xl border-b border-border/50">
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-8 h-16">
+          <Link to="/" className="flex items-center gap-2.5">
+            <img src={LOGO} alt="Aurora" className="w-9 h-9 rounded-xl shadow-[0_0_20px_hsl(var(--primary)/0.4)]" />
+            <span className="font-display font-bold text-xl tracking-tight bg-gradient-to-r from-violet-400 via-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">
+              AURORA
+            </span>
+          </Link>
+          <nav className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => (
+              <NavLink key={item.to} to={item.to} className={topLinkClass} end={item.to === '/'}>
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
         </div>
-        {navItems.map((item) => (
-          <NavLink key={item.to} to={item.to} className={linkClass} end={item.to === '/'}>
-            <item.icon className="w-4 h-4" />
-            {item.label}
-          </NavLink>
-        ))}
-      </aside>
+      </header>
 
-      <main className="flex-1 min-w-0 pb-20 md:pb-0">
+      <main className="pb-20 md:pb-8">
         <Outlet />
       </main>
 
-      {/* Mobile bottom nav */}
+      {/* Mobile bottom tabs */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-card/90 backdrop-blur-xl border-t border-border flex justify-around px-2 py-1">
         {navItems.map((item) => (
           <NavLink key={item.to} to={item.to} className={mobileLinkClass} end={item.to === '/'}>

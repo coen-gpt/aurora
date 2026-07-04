@@ -47,7 +47,7 @@ export default function PlaylistManager({ playlists, activeId, onAdd, onRemove, 
           <DialogHeader>
             <DialogTitle>Add your playlist</DialogTitle>
             <DialogDescription>
-              Paste a link to your own M3U playlist. StreamHub never hosts or stores stream content — your link stays on this device only.
+              Paste a link to your own M3U playlist. Aurora never hosts or stores stream content — your link stays on this device only.
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleAdd} className="space-y-3">

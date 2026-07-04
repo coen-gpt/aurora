@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { load, save } from '@/lib/storage';
 import VideoPlayer from '@/components/player/VideoPlayer';
@@ -17,7 +18,14 @@ export default function Player() {
   const [search, setSearch] = useState('');
   const [group, setGroup] = useState('All');
   const [favsOnly, setFavsOnly] = useState(false);
-  const [current, setCurrent] = useState(null);
+  const location = useLocation();
+  const [current, setCurrent] = useState(location.state?.channel || null);
+
+  const playChannel = (ch) => {
+    setCurrent(ch);
+    const recents = load('iptv_recent', []).filter((r) => r.url !== ch.url);
+    save('iptv_recent', [ch, ...recents].slice(0, 12));
+  };
 
   useEffect(() => { save('iptv_playlists', playlists); }, [playlists]);
   useEffect(() => { save('iptv_active_playlist', activeId); }, [activeId]);
@@ -28,7 +36,6 @@ export default function Player() {
     if (!pl) { setChannels([]); return; }
     setLoading(true);
     setError(null);
-    setCurrent(null);
     base44.functions.invoke('fetchPlaylist', { url: pl.url })
       .then((res) => {
         if (res.data.error) setError(res.data.error);
@@ -117,7 +124,7 @@ export default function Player() {
             channels={filtered}
             favorites={favorites}
             onToggleFav={toggleFav}
-            onSelect={setCurrent}
+            onSelect={playChannel}
             selectedUrl={current?.url}
           />
         </div>
