@@ -10,6 +10,7 @@ import Layout from '@/components/Layout';
 import Home from '@/pages/Home';
 import Player from '@/pages/Player';
 import Guide from '@/pages/Guide';
+import TvMode from '@/pages/TvMode';
 import Devices from '@/pages/Devices';
 import Remote from '@/pages/Remote';
 import Lighting from '@/pages/Lighting';
@@ -44,6 +45,7 @@ const AuthenticatedApp = () => {
         <Route path="/" element={<Home />} />
         <Route path="/player" element={<Player />} />
         <Route path="/guide" element={<Guide />} />
+        <Route path="/tv" element={<TvMode />} />
         <Route path="/devices" element={<Devices />} />
         <Route path="/remote" element={<Remote />} />
         <Route path="/lighting" element={<Lighting />} />

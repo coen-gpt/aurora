@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { load, save } from '@/lib/storage';
 import { loadChannels, loadEpg } from '@/lib/iptv';
 import VideoPlayer from '@/components/player/VideoPlayer';
 import ChannelList from '@/components/player/ChannelList';
 import PlaylistManager from '@/components/player/PlaylistManager';
+import MediaInfoModal from '@/components/player/MediaInfoModal';
+import SendToTv from '@/components/player/SendToTv';
 import { Input } from '@/components/ui/input';
-import { Search, Loader2, Star, Tv } from 'lucide-react';
+import { Search, Loader2, Star, Tv, MonitorPlay } from 'lucide-react';
 
 export default function Player() {
   const [playlists, setPlaylists] = useState(() => load('iptv_playlists', []));
@@ -22,6 +24,7 @@ export default function Player() {
   const [reloadKey, setReloadKey] = useState(0);
   const location = useLocation();
   const [current, setCurrent] = useState(location.state?.channel || null);
+  const [infoChannel, setInfoChannel] = useState(null);
 
   useEffect(() => { save('iptv_playlists', playlists); }, [playlists]);
   useEffect(() => { save('iptv_active_playlist', activeId); }, [activeId]);
@@ -89,9 +92,14 @@ export default function Player() {
 
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-5">
-      <div>
-        <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight">IPTV Player</h1>
-        <p className="text-sm text-muted-foreground mt-1">Bring your own playlist or Xtream login. Nothing is stored in the app.</p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="font-display text-2xl md:text-3xl font-bold tracking-tight">IPTV Player</h1>
+          <p className="text-sm text-muted-foreground mt-1">Bring your own playlist or Xtream login. Nothing is stored in the app.</p>
+        </div>
+        <Link to="/tv" className="shrink-0 flex items-center gap-1.5 text-xs font-medium text-primary hover:underline mt-1.5">
+          <MonitorPlay className="w-4 h-4" /> TV Mode
+        </Link>
       </div>
 
       <PlaylistManager
@@ -103,7 +111,16 @@ export default function Player() {
         onUpdate={updatePlaylist}
       />
 
-      {current && <VideoPlayer channel={current} guide={guide} onClose={() => setCurrent(null)} />}
+      {current && (
+        <div className="space-y-2">
+          <VideoPlayer channel={current} guide={guide} onClose={() => setCurrent(null)} />
+          <div className="flex justify-end">
+            <SendToTv channel={current} />
+          </div>
+        </div>
+      )}
+
+      {infoChannel && <MediaInfoModal channel={infoChannel} guide={guide} onClose={() => setInfoChannel(null)} />}
 
       {loading && (
         <div className="flex items-center justify-center gap-3 py-16 text-muted-foreground">
@@ -143,6 +160,7 @@ export default function Player() {
             favorites={favorites}
             onToggleFav={toggleFav}
             onSelect={playChannel}
+            onInfo={setInfoChannel}
             selectedUrl={current?.url}
             guide={guide}
           />

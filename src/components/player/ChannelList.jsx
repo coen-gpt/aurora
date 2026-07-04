@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
-import { Star, Tv, Play } from 'lucide-react';
+import { Star, Tv, Play, Info } from 'lucide-react';
 import { nowNext } from '@/lib/iptv';
 import HoverPreview from '@/components/player/HoverPreview';
 
-export default function ChannelList({ channels, favorites, onToggleFav, onSelect, selectedUrl, guide = {} }) {
+export default function ChannelList({ channels, favorites, onToggleFav, onSelect, onInfo, selectedUrl, guide = {} }) {
   const [hovered, setHovered] = useState(null);
   const timer = useRef(null);
 
@@ -62,6 +62,13 @@ export default function ChannelList({ channels, favorites, onToggleFav, onSelect
                 <p className="text-[11px] text-muted-foreground truncate">{ch.group}</p>
               )}
             </div>
+            <button
+              onClick={(e) => { e.stopPropagation(); onInfo?.(ch); }}
+              className="p-1.5 rounded-lg text-muted-foreground/40 hover:text-primary transition-colors"
+              title="Movie & show details"
+            >
+              <Info className="w-4 h-4" />
+            </button>
             <button
               onClick={(e) => { e.stopPropagation(); onToggleFav(ch.url); }}
               className={`p-1.5 rounded-lg transition-colors ${isFav ? 'text-amber-400' : 'text-muted-foreground/40 hover:text-amber-400'}`}
